@@ -1,0 +1,3 @@
+{
+  "jsondata":"{\r\n  \"source\": \"mobile\",\r\n  \"version\": 2.0,\r\n  \"orderdate\": \"2019-11-04T12:40:00.000Z\",\r\n  \"details\": {\r\n    \"memid\": \"12345\",\r\n    \"payment\": \"visa\",\r\n    \"products\": [\r\n      {\r\n        \"product\": \"Iced Latte1\"\r\n      },\r\n      {\r\n        \"product\": \"Iced Mocha\"\r\n      }\r\n    ]\r\n  }\r\n}"
+}

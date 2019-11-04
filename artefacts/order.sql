@@ -5,18 +5,16 @@ CREATE TABLE Orders (
 INSERT INTO Orders (jsondata) VALUES ('{
   "source": "mobile",
   "version": 1.0,
-  "orderdate": "2019-11-04T16:50:00.000Z",
+  "orderdate": "2019-11-04T12:40:00.000Z",
   "details": {
     "memid": "12345",
     "payment": "visa",
     "products": [
       {
-        "product": "Iced Latte1",
-        "size": "Large"
+        "product": "Iced Latte1"
       },
       {
-        "product": "Iced Mocha",
-        "size": "Small"
+        "product": "Iced Mocha"
       }
     ]
   }
@@ -24,6 +22,15 @@ INSERT INTO Orders (jsondata) VALUES ('{
 
 commit;
 
+
+-- enable
+apex -> create workspace
+db name=KYLE
+workspace=KYLE
+login kyle workspace -> sql workshop -> rest service -> register schema with ORDS -> enable sample module
+create new module -> create template -> create handler
+
+-- get, not ends with ;
 select * from Orders;
 
 select count(t.product_name) count, t.product_name
@@ -33,9 +40,17 @@ from orders o,
               product_name VARCHAR2 path '$.product'
          )
      ) t
-where to_timestamp(json_value(o.jsondata, '$.orderdate'), 'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"') > sysdate - interval '10' minute
+where TO_DATE(SUBSTR(json_value(o.jsondata, '$.orderdate'), 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') > (sysdate - 10/(24*60))
 group by product_name
--- not ends with ;
+
+-- post
+begin
+insert into orders(jsondata) values(:jsondata);
+end;
+
+curl -X "POST" "xxx" \
+     -H 'Content-Type: application/json' \
+     -d @test.json
 
 
 

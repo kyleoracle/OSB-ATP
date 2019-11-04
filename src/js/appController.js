@@ -26,6 +26,8 @@ define(['ojs/ojcore', 'knockout', 'ojs/ojmodule-element-utils', 'config/appconfi
       self.router = oj.Router.rootInstance;
       self.router.configure({
           'welcome': {label: 'Cafe Supremo', isDefault: true},
+          'product': {label: 'TOP PRODUCTS'},
+          'order': {label: 'PLACE ORDER'},
           'discover': {label: 'DISCOVER COFFEE'},
           'store': {label: 'STORES'},
           'reward': {label: 'REWARDS'},
@@ -59,6 +61,8 @@ define(['ojs/ojcore', 'knockout', 'ojs/ojmodule-element-utils', 'config/appconfi
       self.navDataSourceX = new ko.observableArray(
         [
              {name: 'Welcome', id: 'welcome', disabled: false}
+             ,{name: 'Top Product', id: 'product', disabled: false}
+            ,{name: 'Place Order', id: 'order', disabled: false}
             ,{name: 'Discover', id: 'discover', disabled: false}
             ,{name: 'Stores', id: 'store', disabled: false}
             ,{name: 'Rewards', id: 'reward', disabled: ""+!(rewardsEnabled&&self.logg())}
