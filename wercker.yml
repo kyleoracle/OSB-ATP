@@ -1,163 +1,46 @@
 box:
-  id: alpine:3.2
-provision-atp:
-  box:
-    id: alpine
-    cmd: /bin/sh
-  steps:
-  - kubectl:
-      name: show pods status
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: get pods -o wide
+  id: node:latest
+  ports:
+    - $PORT
 
-create-atp-instance:
-  box:
-    id: alpine
-    cmd: /bin/sh
+# Build definition
+build:
+  # The steps that will be executed on build
   steps:
-  - bash-template
-  - kubectl:
-      name: create atp instance
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: create -f ./atp-instance-plain.yaml
+    # A step that executes `npm install` command
+    - npm-install
 
-connect-to-existing-atp-instance:
-  box:
-    id: alpine
-    cmd: /bin/sh
+#Push the docker image with our built and tested application to Docker Hub
+push-release:
   steps:
-  - bash-template
-  - kubectl:
-      name: connect to existiing atp instance
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: create -f ./atp-existing-instance.yaml
-
-create-atp-binding:
-  box:
-    id: alpine
-    cmd: /bin/sh
-  steps:
-  - bash-template
-  - kubectl:
-      name: create atp binding
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: create -f ./atp-binding-plain.yaml
-  - script:
-      name: "show secret config template"
-      code: cat ./atp-demo-secret.yaml
-  - script:
-      name: "add credentials to secret config"
-      code: |
-        sed -i '/walletPassword.*/d' atp-demo-secret.yaml
-        sed -i '/password.*/d' atp-demo-secret.yaml
-        cat atp-demo-secret.yaml
-        echo "  password: $(echo -n $DB_ADMIN_PASSWORD | base64)" >> atp-demo-secret.yaml
-        echo "  walletPassword: $(echo -n $WALLET_PASSWORD | base64)" >> atp-demo-secret.yaml
-        cat atp-demo-secret.yaml
-  - kubectl:
-      name: create atp secret
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: create -f ./atp-demo-secret.yaml
-
-delete-atp-binding:
-  box:
-    id: alpine
-    cmd: /bin/sh
-  steps:
-  - bash-template
-  - kubectl:
-      name: delete atp binding
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: delete -f ./atp-binding-plain.yaml
-
-delete-atp-secret:
-  box:
-    id: alpine
-    cmd: /bin/sh
-  steps:
-  - bash-template
-  - kubectl:
-      name: delete atp secret
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: delete -f ./atp-demo-secret.yaml
-
-delete-atp-instance:
-  box:
-    id: alpine
-    cmd: /bin/sh
-  steps:
-  - bash-template
-  - kubectl:
-      name: delete atp instance binding and OCI instance
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: delete -f ./atp-instance-plain.yaml
-
-delete-existing-atp-instance:
-  box:
-    id: alpine
-    cmd: /bin/sh
-  steps:
-  - bash-template
-  - kubectl:
-      name: delete an existiing atp binding in osb only
-      server: $KUBERNETES_MASTER
-      token: $KUBERNETES_TOKEN
-      insecure-skip-tls-verify: true
-      command: delete -f ./atp-existing-instance.yaml
-
-build-app:
-  box: oraclelinux:7-slim
-  steps:
-    - internal/docker-build:
-        build-args: ""
-        dockerfile: Dockerfile
-        image-name: cafesupremo
     - internal/docker-push:
-        image-name: cafesupremo
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
         repository: $DOCKER_REPO
         registry: $DOCKER_REGISTRY
-        tag: latest, $WERCKER_GIT_BRANCH-$WERCKER_GIT_COMMIT
-        ports: 8080
-        env: LD_LIBRARY_PATH=/opt/oracle/instantclient_19_3 TNS_ADMIN=/reward/Wallet_ATPDemoDB WALLET_LOCATION=/reward/Wallet_ATPDemoDB
-        cmd: node server.js
+        tag: $WERCKER_GIT_BRANCH-$WERCKER_GIT_COMMIT
+        working-dir: /pipeline/source
+        ports: $PORT
+        env: PORT=$PORT
+        cmd: node web.js
 
+#Deploy our container from the Docker Hub to Kubernetes
 deploy-to-cluster:
     box:
         id: alpine
         cmd: /bin/sh
     steps:
+
     - bash-template
+
     - script:
         name: "Visualise Kubernetes config"
-        code: cat osbatp-deploy.yml
+        code: cat kubernetes.yml
+
     - kubectl:
         name: deploy to kubernetes
         server: $KUBERNETES_MASTER
-        # username: $KUBERNETES_USERNAME
+        #username: $KUBERNETES_USERNAME
         token: $KUBERNETES_TOKEN
         insecure-skip-tls-verify: true
-        command: apply -f ./osbatp-deploy.yml
-    - kubectl:
-        name: apply service
-        server: $KUBERNETES_MASTER
-        token: $KUBERNETES_TOKEN
-        insecure-skip-tls-verify: true
-        command: apply -f ./osbatp-service.yml
+        command: apply -f kubernetes.yml

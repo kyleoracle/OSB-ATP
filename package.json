@@ -2,16 +2,14 @@
   "name": "multipoints",
   "version": "0.0.1",
   "description": "client server cafesupremo with multicloud",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"No test specified\" && exit 1",
-    "prepublish": "zip -r target/cafesupremo.zip node_modules web manifest.json *.js"
+    "test": "echo \"No test specified\" && exit 1"
   },
   "dependencies": {
-    "express": "^4.15.4",
+    "express": "^4.16.4",
     "@oracle/oraclejet": "~5.2.0",
     "path": "",
-    "express": "^4.16.4",
     "oracledb": "^2.3.0",
     "request": ""
   },
