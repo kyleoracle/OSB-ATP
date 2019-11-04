@@ -10,7 +10,6 @@
     "express": "^4.16.4",
     "@oracle/oraclejet": "~5.2.0",
     "path": "",
-    "oracledb": "^2.3.0",
     "request": ""
   },
   "devDependencies": {
