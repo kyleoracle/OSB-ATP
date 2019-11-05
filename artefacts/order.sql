@@ -41,7 +41,7 @@ from orders o,
          )
      ) t
 where TO_DATE(SUBSTR(json_value(o.jsondata, '$.orderdate'), 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') > (sysdate - 10/(24*60))
-group by product_name
+group by product_name order by count desc
 
 -- post
 begin

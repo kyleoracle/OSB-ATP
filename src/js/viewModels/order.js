@@ -3,14 +3,15 @@
  * ViewModel: Discover
  * Author: Rayes Huang
  */
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojlistview', 'ojs/ojjsontreedatasource', 'ojs/ojbutton'],
- function(oj, ko, $) {
+define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojknockout', 'ojs/ojlistview', 'ojs/ojjsontreedatasource', 'ojs/ojbutton'],
+ function(oj, ko, $, app) {
 
     function DiscoverViewModel() {
       var self = this;
       self.products = new ko.observable();
       self.ds = new ko.observable();
       self.v = ko.observable("v1");
+      self.message = ko.observable("");
 
 
       self.itemOnly = function(context)
@@ -84,6 +85,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojlistview', 
       
       self.submit = function() {
       
+        self.message('');
         console.log(self.ds.children);
 
         let order = {
@@ -91,8 +93,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojlistview', 
           "version": self.v(),
           "orderdate": new Date().toISOString(),
           "details": {
-            "memid": "12345",
+            "memid": app.userid(),
             "payment": "visa",
+            "temp": app.temp(),
             "products": [
             ]
           }
@@ -110,6 +113,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojlistview', 
         console.log(order);
 
         if(order.details.products.length === 0){
+          self.message('empty cart');
           return;
         }
 
@@ -122,7 +126,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojlistview', 
             contentType: "application/json",
             success: function (data) {
                 console.log('success');
-                alert('success');
+                self.message('success');
             }
         });
 

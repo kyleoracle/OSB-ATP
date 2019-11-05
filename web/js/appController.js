@@ -9,6 +9,8 @@ define(['ojs/ojcore', 'knockout', 'ojs/ojmodule-element-utils', 'config/appconfi
      function ControllerViewModel() {
        var self = this;
        self.userid = new ko.observable();
+       self.temp = new ko.observable("Temperature");
+
        // to enable disable reward
        // edit kenneth.heung 20190509
        self.logg   = new ko.observable();

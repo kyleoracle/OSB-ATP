@@ -18,12 +18,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'config/appconfig',
                 if(!loginEnabled){
                     app.userid(appConfig.get("defaultUser"));
                 }
-
-                self.username = new ko.observable("user@email.com");
+                self.app = app;
+                self.username = new ko.observable("user01");
                 self.password = new ko.observable("");
                 self.signUpMe = function () {
-                    // EDIT the IP address
-                    window.location="http://127.0.0.1:9001/index.php";
                     console.log("sign up");
                 }
 
@@ -31,6 +29,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'config/appconfig',
                     document.querySelector("#loginDialog").open();
                 }
 
+            
+                $.getJSON("https://openweathermap.org/data/2.5/weather/?appid=b6907d289e10d714a6e88b30761fae22&id=1819730",
+                    function(data){
+                        console.log(data);
+                        app.temp(data.main.temp);
+                    }
+                );
+            
                 self.login  = function () {
                     if(loginEnabled){
                       // console.log("password: " + self.password);
@@ -55,6 +61,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'config/appconfig',
                       }
                     }
                     else{
+                        app.userid(self.username());
                         self.loginComplete();
                     }
                 }

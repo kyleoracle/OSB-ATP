@@ -1,0 +1,42 @@
+{
+    "coord": {
+        "lon": 114.17,
+        "lat": 22.25
+    },
+    "weather": [
+        {
+            "id": 800,
+            "main": "Clear",
+            "description": "clear sky",
+            "icon": "01d"
+        }
+    ],
+    "base": "stations",
+    "main": {
+        "temp": 26.32,
+        "pressure": 1015,
+        "humidity": 36,
+        "temp_min": 25.56,
+        "temp_max": 27.22
+    },
+    "visibility": 10000,
+    "wind": {
+        "speed": 4.6,
+        "deg": 50
+    },
+    "clouds": {
+        "all": 0
+    },
+    "dt": 1572924138,
+    "sys": {
+        "type": 1,
+        "id": 9154,
+        "country": "HK",
+        "sunrise": 1572906550,
+        "sunset": 1572947074
+    },
+    "timezone": 28800,
+    "id": 1819730,
+    "name": "Hong Kong Special Administrative Region",
+    "cod": 200
+}
