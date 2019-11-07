@@ -9,6 +9,7 @@ INSERT INTO Orders (jsondata) VALUES ('{
   "details": {
     "memid": "12345",
     "payment": "visa",
+    "temp": "27.2",
     "products": [
       {
         "product": "Iced Latte1"
@@ -53,6 +54,56 @@ curl -X "POST" "xxx" \
      -d @test.json
 
 
+-- json index / json guide / virtual column
+DROP INDEX json_docs_search_idx;
+CREATE SEARCH INDEX json_docs_search_idx ON Orders (jsondata) FOR JSON;
+-- enable auto add virtual column
+ALTER INDEX json_docs_search_idx REBUILD PARAMETERS ('DATAGUIDE ON CHANGE ADD_VC');
+-- query json guide
+SELECT JSON_DATAGUIDE(jsondata) dg_doc FROM Orders;
+
+SELECT DBMS_JSON.get_index_dataguide(
+        'Orders',
+        'jsondata',
+        DBMS_JSON.format_hierarchical,
+        DBMS_JSON.pretty) AS dg
+FROM   dual;
+-- add virtual column, must be format_hierarchical, array is ignored
+BEGIN
+DBMS_JSON.add_virtual_columns(
+tablename  => 'Orders',
+jcolname   => 'jsondata',
+dataguide  => DBMS_JSON.get_index_dataguide(
+                'Orders',
+                'jsondata',
+                DBMS_JSON.format_hierarchical)
+                );
+END;
+/
+
+-- remove virtual column
+BEGIN
+  DBMS_JSON.drop_virtual_columns(
+    tablename  => 'Orders',
+    jcolname   => 'jsondata');
+END;
+/
+
+-- Create view, array is included
+BEGIN
+  DBMS_JSON.create_view(
+    viewname  => 'Orders_v1',
+    tablename => 'Orders',
+    jcolname  => 'jsondata',
+    dataguide =>  DBMS_JSON.get_index_dataguide(
+                    'Orders',
+                    'jsondata',
+                    DBMS_JSON.format_hierarchical));
+END;
+/
+
+-- remove view
+DROP VIEW Orders_v1;
 
 
 

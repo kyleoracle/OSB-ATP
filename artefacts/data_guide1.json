@@ -1,0 +1,61 @@
+{
+    "type": "object",
+    "properties": {
+        "source": {
+            "type": "string",
+            "o:length": 8,
+            "o:preferred_column_name": "JSONDATA$source"
+        },
+        "details": {
+            "type": "object",
+            "o:length": 512,
+            "o:preferred_column_name": "JSONDATA$details",
+            "properties": {
+                "temp": {
+                    "type": "string",
+                    "o:length": 16,
+                    "o:preferred_column_name": "JSONDATA$temp"
+                },
+                "memid": {
+                    "type": "string",
+                    "o:length": 8,
+                    "o:preferred_column_name": "JSONDATA$memid"
+                },
+                "payment": {
+                    "type": "string",
+                    "o:length": 4,
+                    "o:preferred_column_name": "JSONDATA$payment"
+                },
+                "products": {
+                    "type": "array",
+                    "o:length": 256,
+                    "o:preferred_column_name": "JSONDATA$products",
+                    "items": {
+                        "properties": {
+                            "size": {
+                                "type": "string",
+                                "o:length": 8,
+                                "o:preferred_column_name": "JSONDATA$size"
+                            },
+                            "product": {
+                                "type": "string",
+                                "o:length": 16,
+                                "o:preferred_column_name": "JSONDATA$product"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "version": {
+            "type": "string",
+            "o:length": 4,
+            "o:preferred_column_name": "JSONDATA$version"
+        },
+        "orderdate": {
+            "type": "string",
+            "o:length": 32,
+            "o:preferred_column_name": "JSONDATA$orderdate"
+        }
+    }
+}

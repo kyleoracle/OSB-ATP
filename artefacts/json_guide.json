@@ -1,0 +1,62 @@
+[
+    {
+        "o:path": "$.source",
+        "type": "string",
+        "o:length": 8,
+        "o:preferred_column_name": "JSONDATA$source"
+    },
+    {
+        "o:path": "$.details",
+        "type": "object",
+        "o:length": 512,
+        "o:preferred_column_name": "JSONDATA$details"
+    },
+    {
+        "o:path": "$.details.temp",
+        "type": "string",
+        "o:length": 16,
+        "o:preferred_column_name": "JSONDATA$temp"
+    },
+    {
+        "o:path": "$.details.memid",
+        "type": "string",
+        "o:length": 8,
+        "o:preferred_column_name": "JSONDATA$memid"
+    },
+    {
+        "o:path": "$.details.payment",
+        "type": "string",
+        "o:length": 4,
+        "o:preferred_column_name": "JSONDATA$payment"
+    },
+    {
+        "o:path": "$.details.products",
+        "type": "array",
+        "o:length": 256,
+        "o:preferred_column_name": "JSONDATA$products"
+    },
+    {
+        "o:path": "$.details.products.size",
+        "type": "string",
+        "o:length": 8,
+        "o:preferred_column_name": "JSONDATA$size"
+    },
+    {
+        "o:path": "$.details.products.product",
+        "type": "string",
+        "o:length": 16,
+        "o:preferred_column_name": "JSONDATA$product"
+    },
+    {
+        "o:path": "$.version",
+        "type": "string",
+        "o:length": 4,
+        "o:preferred_column_name": "JSONDATA$version"
+    },
+    {
+        "o:path": "$.orderdate",
+        "type": "string",
+        "o:length": 32,
+        "o:preferred_column_name": "JSONDATA$orderdate"
+    }
+]
