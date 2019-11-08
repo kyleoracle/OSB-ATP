@@ -105,6 +105,36 @@ END;
 -- remove view
 DROP VIEW Orders_v1;
 
+-- Create view, defined column names.
+BEGIN
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.source', DBMS_JSON.TYPE_STRING, 'o_source');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details', DBMS_JSON.TYPE_BOOLEAN, 'o_details');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details.temp', DBMS_JSON.TYPE_STRING, 'o_temp');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details.memid', DBMS_JSON.TYPE_STRING, 'o_memid');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details.payment', DBMS_JSON.TYPE_STRING, 'o_payment');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details.products', DBMS_JSON.TYPE_STRING, 'o_products');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details.products.size', DBMS_JSON.TYPE_STRING, 'o_size');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.details.products.product', DBMS_JSON.TYPE_STRING, 'o_product');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.version', DBMS_JSON.TYPE_STRING, 'o_version');
+  DBMS_JSON.rename_column('Orders', 'jsondata', '$.orderdate', DBMS_JSON.TYPE_STRING, 'o_orderdate');
+END;
+/
+
+BEGIN
+  DBMS_JSON.create_view(
+    viewname  => 'Orders_v2',
+    tablename => 'Orders',
+    jcolname  => 'jsondata',
+    dataguide =>  DBMS_JSON.get_index_dataguide(
+                    'Orders',
+                    'jsondata',
+                    DBMS_JSON.format_hierarchical));
+END;
+/
+
+-- remove view
+DROP VIEW Orders_v2;
+
 
 
 
