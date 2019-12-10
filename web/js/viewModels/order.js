@@ -88,18 +88,36 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojknockout', '
         self.message('');
         console.log(self.ds.children);
 
-        let order = {
-          "source": "mobile",
-          "version": self.v(),
-          "orderdate": new Date().toISOString(),
-          "details": {
-            "memid": app.userid(),
-            "payment": "visa",
-            "temp": app.temp(),
-            "products": [
-            ]
-          }
-        };
+        let order = {};
+        if('v1' == self.v()){
+          // no temp
+          order = {
+            "source": "mobile",
+            "version": self.v(),
+            "orderdate": new Date().toISOString(),
+            "details": {
+              "memid": app.userid(),
+              "payment": "visa",
+              "products": [
+              ]
+            }
+          };
+        }else{
+          // there is temp
+          order = {
+            "source": "mobile",
+            "version": self.v(),
+            "orderdate": new Date().toISOString(),
+            "details": {
+              "memid": app.userid(),
+              "payment": "visa",
+              "temp": app.temp(),
+              "products": [
+              ]
+            }
+          };
+        }
+        
 
         self.ds.children.forEach(e => {
           if(e.attr.count>0){
